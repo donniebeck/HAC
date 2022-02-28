@@ -16,7 +16,8 @@ import java.net.InetAddress;
 import java.util.Vector;
 
 
-public class Message implements Serializable {
+public class Message implements Serializable 
+{
 	// The serialVersionUID is a identifier that is used to 
 	// serialize/deserialize an object of a Serializable class.
 	// value could be 1,2,3,4L
@@ -30,7 +31,8 @@ public class Message implements Serializable {
     private Vector<InetAddress> IPlist;
     
     // The Message constructor.
-    public Message(boolean isP2P, boolean isHeartbeating, String text, Vector<InetAddress> IPs) {
+    public Message(boolean isP2P, boolean isHeartbeating, String text, Vector<InetAddress> IPs) 
+    {
     	
     	this.isP2P = isP2P;  //True: P2P, False: Client-Server
     	this.isHeartbeating = isHeartbeating; 
@@ -51,7 +53,8 @@ public class Message implements Serializable {
      * get of version
      * @return the version of the message class
      */
-    public double getVersion() {
+    public double getVersion() 
+    {
       return this.version;
     }
 
@@ -59,7 +62,8 @@ public class Message implements Serializable {
      * get of IP list
      * @return the IPlist in the message
      */
-    public Vector<InetAddress> getIPList() {
+    public Vector<InetAddress> getIPList() 
+    {
       return this.IPlist;
     }
 
@@ -67,7 +71,8 @@ public class Message implements Serializable {
      * get of functioning mode of a message
      * @return the mode of the message
      */
-    public boolean getP2P() {
+    public boolean getP2P() 
+    {
       return this.isP2P;
     }
 
@@ -75,7 +80,8 @@ public class Message implements Serializable {
      * get the usage of a this message
      * @return the boolean value of Heartbeat of the message
      */
-    public boolean getHeartbeating() {
+    public boolean getHeartbeating() 
+    {
       return this.isHeartbeating;
     }
 
@@ -83,7 +89,8 @@ public class Message implements Serializable {
      * set text message contained in a message
      * @param textt the text desired to be stored in the text field
      */
-    public void setText(String text) {
+    public void setText(String text) 
+    {
       this.text = text;
     }
 
@@ -91,7 +98,8 @@ public class Message implements Serializable {
      * set the meaning of the message
      * @param meaning the meaning of the message
      */
-    public void setMeaning(boolean meaning) {
+    public void setMeaning(boolean meaning) 
+    {
       this.isHeartbeating = meaning;
     }
     
@@ -101,21 +109,23 @@ public class Message implements Serializable {
 	 * No parameter, use all data inside of message object.
      * @return the bytes number of this object.
      */
-    private byte[] serializedMessage() {
-    		// Create a new message object to be serialized.
-            Message serialMessageObj = new Message(this.isP2P, this.isHeartbeating, this.text, this.IPlist);
+    private byte[] serializedMessage() 
+    {
+		// Create a new message object to be serialized.
+	    Message serialMessageObj = new Message(this.isP2P, this.isHeartbeating, this.text, this.IPlist);
         
-            // Serialize the message to be fitted into a buffer
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            ObjectOutput outBuffer;
-        try {
-            // write the message objects in the buffer
-        	outBuffer = new ObjectOutputStream(outStream);
-        	outBuffer.writeObject(serialMessageObj);
-        	outBuffer.close();
+        // Serialize the message to be fitted into a buffer
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        ObjectOutput outBuffer;
+        try 
+        {
+	        // write the message objects in the buffer
+	    	outBuffer = new ObjectOutputStream(outStream);
+	    	outBuffer.writeObject(serialMessageObj);
+	    	outBuffer.close();
         } catch (IOException io) {
-          io.printStackTrace();
-          System.exit(-1);
+            io.printStackTrace();
+            System.exit(-1);
         }
         byte[] requestbuffer = outStream.toByteArray();
         return requestbuffer;
@@ -126,14 +136,16 @@ public class Message implements Serializable {
      * @param incomingPacket the packet to extract data from
      * @return to the taget message with the deserialized information.
      */
-    public Message deserializer(DatagramPacket incomingPacket) {
+    public Message deserializer(DatagramPacket incomingPacket) 
+    {
         ObjectInputStream inputStream;
         Message responsemessage = null;
-    	try {
-            byte[] buffer = incomingPacket.getData();
-            inputStream = new ObjectInputStream(new ByteArrayInputStream(buffer));
-            responsemessage = (Message) inputStream.readObject();
-            inputStream.close();
+    	try 
+    	{
+	        byte[] buffer = incomingPacket.getData();
+	        inputStream = new ObjectInputStream(new ByteArrayInputStream(buffer));
+	        responsemessage = (Message) inputStream.readObject();
+	        inputStream.close();
         } 
     	catch (Exception e) 
     	{
@@ -149,7 +161,8 @@ public class Message implements Serializable {
      * @param port the port number used to transmit the message
      * @return the completed network package originated from the input message
      */
-    public DatagramPacket createPacket(InetAddress hostIP, int port) {
+    public DatagramPacket createPacket(InetAddress hostIP, int port) 
+    {
       // we first serialize with all the information we have in this object into bytes.
       byte[] requestbuffer = serializedMessage();
       // And we start to pack them with host IP address and port number
