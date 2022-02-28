@@ -13,7 +13,7 @@ public class P2P
 	private static final int PORT_NO = 9876;
 	
 	private static Vector<InetAddress> knownIP = new Vector<>();
-	private static String myIP;
+	private static String myIP = "/";
 	private static DatagramSocket socket;
 	private static Message message = new Message(true, true, "Hello, this is a client ", knownIP);
 
@@ -26,8 +26,8 @@ public class P2P
 		while (true)
 		{
 			for (InetAddress address : knownIP)
-			{
-				if(address.toString() != myIP)
+			{	
+				if(!address.toString().equals(myIP))
 				{
 					DatagramPacket packet = message.createPacket(address, PORT_NO);
 					try
@@ -54,6 +54,7 @@ public class P2P
 			
 			Message recieved = new Message(false, false, "", knownIP);
 			recieved = recieved.deserializer(recievedPacket);
+			System.out.println(recievedPacket.getAddress());
 			
 		}
 		
@@ -75,7 +76,7 @@ public class P2P
 	{
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
-		myIP = configReader.getSingleIP("myIP.txt");
+		myIP += configReader.getSingleIP("myIP.txt");
 		
 		//Load all IPs into vector from txt file
 		String ipList[] = configReader.getIPListFromFile("ipList.txt");
