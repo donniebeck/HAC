@@ -169,17 +169,4 @@ public class Message implements Serializable
       DatagramPacket outPacket = new DatagramPacket(requestbuffer, requestbuffer.length, hostIP, port);
       return outPacket;
     }
-    
-//    public static void main(String args[]) {
-//    	Vector<InetAddress> ips = new Vector<InetAddress>();
-//    	Message m1 = new Message(true, true, "hello", ips);   	
-//    	byte[] requestbuffer = m1.serializedMessage();
-//    	
-//    	InetAddress hostaddress = null;
-//    	DatagramPacket request = new DatagramPacket(requestbuffer, requestbuffer.length, hostaddress, 32);
-//    	
-//    	Message m2 = new Message(false, false, "", ips);
-//    	m2 = m2.deserializer(request);
-//    	System.out.println(m2.getText());
-//    }
 }

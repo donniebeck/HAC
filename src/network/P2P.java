@@ -22,7 +22,6 @@ public class P2P
 		loadIPs();
 		createSocket();
 		
-		
 		while (true)
 		{
 			for (InetAddress address : knownIP)
