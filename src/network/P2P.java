@@ -24,7 +24,11 @@ public class P2P
 		loadIPs();
 		createSocket();
 		
-		int timer = 10;
+		int timer = MAX_TIME;
+		
+		byte[]  buffer = new byte[65508];
+		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
+		Message recieved = new Message(false, false, "", knownIP);
 		
 		while (true)
 		{
@@ -33,32 +37,26 @@ public class P2P
 				timer = 0;
 				sendToAll();
 			}
-			
-			byte[]  buffer = new byte[65508];
-			DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
 			try
 			{
 				socket.receive(recievedPacket);
 			} catch (IOException e)
 			{
-				System.out.println("No message recieved");
+				timer++;
+				System.out.println(timer + " No message recieved");
 				continue;
 			}
-			
-			Message recieved = new Message(false, false, "", knownIP);
 			recieved = recieved.deserializer(recievedPacket);
-			System.out.println(recievedPacket.getAddress());
+			System.out.println(timer + " " +recievedPacket.getAddress());
 			
 			try
 			{
-				Thread.sleep(1);
+				Thread.sleep(1000);
 			} catch (InterruptedException e)
 			{
 				System.out.println("There was an error putting the thread to sleep");
 				e.printStackTrace();
 			}
-			timer++;
-			System.out.println(timer);
 		}
 		
 	}
@@ -87,6 +85,7 @@ public class P2P
 		try
 		{
 			socket = new DatagramSocket(PORT_NO);
+			socket.setSoTimeout(1000);
 		} catch (SocketException e)
 		{
 			System.out.println("The datagram socket could not be created");
