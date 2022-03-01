@@ -25,23 +25,34 @@ public class P2P
 		loadIPs();
 		createSocket();
 		
+		//Starting our timer
 		int timer = MAX_TIME;
 		
+		//Setting up our buffer and dummy message to load data into
 		byte[]  buffer = new byte[65508];
 		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
 		Message recieved = new Message(false, false, "", knownIP);
 		
 		while (true)
 		{
+			
+			//when the timer expires, send to all knownIP
 			if (timer == MAX_TIME)
 			{
 				timer = 0;
 				sendToAll();
+				System.out.println(aliveNodes.toString());
 				aliveNodes.clear();
 			}
+			
+			
+			//attempt to receive message
 			try
 			{
 				socket.receive(recievedPacket);
+				recieved = recieved.deserializer(recievedPacket);
+				System.out.println(recievedPacket.getAddress() + " : " + recieved.getText());
+				//if the source IP is known, add it to alive; if it is unknown,  add it to alive and known
 				if(knownIP.contains(recievedPacket.getAddress())) 
 				{
 					aliveNodes.add(recievedPacket.getAddress());
@@ -56,10 +67,7 @@ public class P2P
 				timer++;
 				System.out.println(timer + " No message recieved");
 				continue;
-			}
-			recieved = recieved.deserializer(recievedPacket);
-			System.out.println(recievedPacket.getAddress() + " is alive! ");
-			System.out.println("Known nodes: " + recieved.getIPList().toString());
+			}	
 		}
 		
 	}
