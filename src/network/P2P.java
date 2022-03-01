@@ -14,9 +14,10 @@ public class P2P
 	private static final int MAX_TIME = 10;
 	
 	private static Vector<InetAddress> knownIP = new Vector<>();
+	private static Vector<InetAddress> aliveNodes = new Vector<>();
 	private static String myIP = "/";
 	private static DatagramSocket socket;
-	private static Message message = new Message(true, true, "Hello, this is a client ", knownIP);
+	private static Message message = new Message(true, true, "Hello, this is a client ", aliveNodes);
 	
 
 	public static void main(String[] args)
@@ -36,10 +37,20 @@ public class P2P
 			{
 				timer = 0;
 				sendToAll();
+				aliveNodes.clear();
 			}
 			try
 			{
 				socket.receive(recievedPacket);
+				if(knownIP.contains(recievedPacket.getAddress())) 
+				{
+					aliveNodes.add(recievedPacket.getAddress());
+				} else
+				{
+					knownIP.add(recievedPacket.getAddress());
+					aliveNodes.add(recievedPacket.getAddress());
+				}
+				
 			} catch (IOException e)
 			{
 				timer++;
@@ -47,16 +58,8 @@ public class P2P
 				continue;
 			}
 			recieved = recieved.deserializer(recievedPacket);
-			System.out.println(timer + " " +recievedPacket.getAddress());
-			
-			try
-			{
-				Thread.sleep(1000);
-			} catch (InterruptedException e)
-			{
-				System.out.println("There was an error putting the thread to sleep");
-				e.printStackTrace();
-			}
+			System.out.println(recievedPacket.getAddress() + " is alive! ");
+			System.out.println("Known nodes: " + recieved.getIPList().toString());
 		}
 		
 	}
