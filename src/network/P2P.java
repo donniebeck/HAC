@@ -32,7 +32,7 @@ public class P2P
 		Message recieved = new Message(false, false, "", knownIP);
 		
 		while (true)
-		{
+		{	
 			if (timer == MAX_TIME)
 			{
 				timer = 0;
@@ -66,19 +66,23 @@ public class P2P
 
 	private static void sendToAll()
 	{
-		for (InetAddress address : knownIP)
+		for (int i = 0; i < knownIP.size(); i++)
 		{	
-			if(!address.toString().equals(myIP))
+			if(!knownIP.get(i).toString().equals(myIP))
 			{
-				DatagramPacket packet = message.createPacket(address, PORT_NO);
+				DatagramPacket packet = message.createPacket(knownIP.get(i), PORT_NO);
 				try
 				{
 					socket.send(packet);
 				} catch (IOException e)
 				{
-					System.out.println("There was an error sending the packet to " + address);
+					System.out.println("There was an error sending the packet to " + knownIP.get(i));
 					e.printStackTrace();
 				}
+			}
+			if(!aliveNodes.contains(knownIP.get(i)))
+			{
+				knownIP.remove(knownIP.get(i));
 			}
 		}
 	}
