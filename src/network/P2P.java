@@ -31,7 +31,7 @@ public class P2P
 		//Setting up our buffer and dummy message to load data into
 		byte[]  buffer = new byte[65508];
 		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
-		Message recieved = new Message(false, false, "", knownIP);
+		Message recievedMessage = new Message(false, false, "", knownIP);
 		
 		while (true)
 		{
@@ -41,8 +41,6 @@ public class P2P
 			{
 				timer = 0;
 				sendToAll();
-				System.out.println(aliveNodes.toString());
-				aliveNodes.clear();
 			}
 			
 			
@@ -50,17 +48,9 @@ public class P2P
 			try
 			{
 				socket.receive(recievedPacket);
-				recieved = recieved.deserializer(recievedPacket);
-				System.out.println(recievedPacket.getAddress() + " : " + recieved.getText());
-				//if the source IP is known, add it to alive; if it is unknown,  add it to alive and known
-				if(knownIP.contains(recievedPacket.getAddress())) 
-				{
-					aliveNodes.add(recievedPacket.getAddress());
-				} else
-				{
-					knownIP.add(recievedPacket.getAddress());
-					aliveNodes.add(recievedPacket.getAddress());
-				}
+				recievedMessage = recievedMessage.deserializer(recievedPacket);
+				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
+				
 				
 			} catch (IOException e)
 			{
