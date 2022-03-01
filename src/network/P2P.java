@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Random;
 import java.util.Vector;
 
 public class P2P
@@ -33,13 +34,25 @@ public class P2P
 		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
 		Message recievedMessage = new Message(false, false, "", knownIP);
 		
+		//Setting up our random message timer
+		Random rand = new Random();
+		int randomTimer = rand.nextInt(MAX_TIME-1);
+		
 		while (true)
 		{
+		
+			if (timer == randomTimer)
+			{
+				sendToAll();
+			}
+			
+			
 			
 			//when the timer expires, send to all knownIP
 			if (timer == MAX_TIME)
 			{
 				timer = 0;
+				randomTimer = rand.nextInt(MAX_TIME-1);
 				sendToAll();
 			}
 			
@@ -49,13 +62,11 @@ public class P2P
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
-				
-				
+				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());	
 			} catch (IOException e)
 			{
 				timer++;
-				System.out.println(timer + " No message recieved");
+				System.out.println(timer + "\t No message recieved");
 				continue;
 			}	
 		}
