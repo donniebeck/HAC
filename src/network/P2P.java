@@ -14,7 +14,7 @@ import java.util.Vector;
 public class P2P
 {
 	private static final int PORT_NO = 9876;
-	private static final int MAX_TIME = 10;
+	private static final int MAX_TIME = 20;
 	
 	private static Hashtable <String, IPEntry> nodeList = new Hashtable<>();
 	private static Hashtable<String, IPEntry> recievedList = new Hashtable<>();
@@ -43,6 +43,7 @@ public class P2P
 		
 		//Our initial heartbeat
 		sendToAll();
+		message.setIsFirstHeartbeat(false);
 		printNodesStatus();
 		
 		while (true)
@@ -74,21 +75,26 @@ public class P2P
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
+				System.out.println(recievedPacket.getAddress().toString().substring(1) + " : " + recievedMessage.getText());
 				
-				
-				recievedList = recievedMessage.getnodeList();
-				
-				if (recievedList != null)
+				if(recievedMessage.getisFirstHeartbeat())
 				{
-					Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
-					
-					for (String tempNodeIP : tempSetOfNodeIPs)
+					nodeList.get(recievedPacket.getAddress().toString().substring(1)).setIsAlive(true);
+				}
+				else
+				{
+					recievedList = recievedMessage.getnodeList();
+					if (recievedList != null)
 					{
-						if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
-								!tempNodeIP.equals(myIP))
+						Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
+						
+						for (String tempNodeIP : tempSetOfNodeIPs)
 						{
-							nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
+									!tempNodeIP.equals(myIP))
+							{
+								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+							}
 						}
 					}
 				}

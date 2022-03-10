@@ -28,17 +28,17 @@ public class Message implements Serializable
 	// Message properties.
 	private double version = 1.0;
 	private boolean isP2P;
-    private boolean isHeartbeat;
+    private boolean isFirstHeartbeat;
     private String text;
     private Hashtable <String, IPEntry> nodeList;
     private static Set<String> setOfNodeIPs; 
     
     // The Message constructor.
-    public Message(boolean isP2P, boolean isHeartbeat, String text, Hashtable<String, IPEntry> nodeList) 
+    public Message(boolean isP2P, boolean isFirstHeartbeat, String text, Hashtable<String, IPEntry> nodeList) 
     {
     	
     	this.isP2P = isP2P;  //True: P2P, False: Client-Server
-    	this.isHeartbeat = isHeartbeat; 
+    	this.isFirstHeartbeat = isFirstHeartbeat; 
         this.text = text;  // The information this variable contains
         this.nodeList = nodeList; // The IP or IP lists the message may contain.
         if(nodeList != null)
@@ -87,9 +87,9 @@ public class Message implements Serializable
      * get the usage of a this message
      * @return the boolean value of Heartbeat of the message
      */
-    public boolean getHeartbeat() 
+    public boolean getisFirstHeartbeat() 
     {
-      return this.isHeartbeat;
+      return this.isFirstHeartbeat;
     }
 
     /**
@@ -105,9 +105,9 @@ public class Message implements Serializable
      * set the meaning of the message
      * @param meaning the meaning of the message
      */
-    public void setMeaning(boolean meaning) 
+    public void setIsFirstHeartbeat(boolean isFirst) 
     {
-      this.isHeartbeat = meaning;
+      this.isFirstHeartbeat = isFirst;
     }
     
     
@@ -119,7 +119,7 @@ public class Message implements Serializable
     private byte[] serializedMessage() 
     {
 		// Create a new message object to be serialized.
-	    Message serialMessageObj = new Message(this.isP2P, this.isHeartbeat, this.text, this.nodeList);
+	    Message serialMessageObj = new Message(this.isP2P, this.isFirstHeartbeat, this.text, this.nodeList);
         
         // Serialize the message to be fitted into a buffer
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
