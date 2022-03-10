@@ -1,23 +1,12 @@
 package network;
 
-import java.net.InetAddress;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class IPEntry 
+public class IPEntry implements Serializable
 {
-	InetAddress nodeIP;
 	Boolean isAlive;
 	LocalDateTime timeStamp;
-	
-	public InetAddress getNodeIP() 
-	{
-		return this.nodeIP;
-	}
-
-	public void setNodeIP(InetAddress nodeIP) 
-	{
-		this.nodeIP = nodeIP;
-	}
 
 	public Boolean getIsAlive() 
 	{
@@ -39,10 +28,20 @@ public class IPEntry
 		this.timeStamp = timeStamp;
 	}
 
-	public IPEntry(InetAddress nodeIPAddress, Boolean status)
+	public IPEntry(Boolean status)
 	{
-		this.nodeIP = nodeIPAddress;
 		this.isAlive = status;
 		this.timeStamp = LocalDateTime.now();
 	}
+	
+	public String getStatusString()
+	{
+		if(isAlive)
+		{
+			return " is alive!";
+		}
+		return " is dead.";
+	}
+	
+	
 }
