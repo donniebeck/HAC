@@ -93,6 +93,7 @@ public class P2P
 							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
 							{
+								System.out.println(tempNodeIP + ":" + recievedList.get(tempNodeIP).getIsAlive());
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 							}
 						}
