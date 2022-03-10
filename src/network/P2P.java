@@ -52,17 +52,17 @@ public class P2P
 			//when the timer expires, send to all knownIP, reset timer and random timer
 			if (timer == MAX_TIME)
 			{
-				
-				
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
 				sendToAll();
-				System.out.println("=================================");
+				printNodesStatus();
 				for (String ip : setOfNodeIPs)
 				{
-					System.out.println(ip + nodeList.get(ip).getStatusString());
+					if(!ip.equals(myIP))
+					{
+					nodeList.get(ip).setIsAlive(false);
+					}
 				}
-				System.out.println("=================================");
 			}
 			
 			
@@ -73,9 +73,22 @@ public class P2P
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
 				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
 				
+				
+				Hashtable<String, IPEntry> temp = recievedMessage.getnodeList();
+				Set<String> tempSetOfNodeIPs = temp.keySet(); 
+				
+				
+				for (String tempNodeIP : tempSetOfNodeIPs)
+				{
+					if(temp.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+					{
+						nodeList.get(tempNodeIP).setIsAlive(temp.get(tempNodeIP).getIsAlive());
+					}
+				}
+				
 				//set recieved ip status to alive
 				nodeList.get(recievedPacket.getAddress().toString().substring(1)).setIsAlive(true);
-				
+			
 		
 				
 				
@@ -88,6 +101,16 @@ public class P2P
 			}	
 		}
 		
+	}
+
+	private static void printNodesStatus()
+	{
+		System.out.println("=================================");
+		for (String ip : setOfNodeIPs)
+		{
+			System.out.println(ip + nodeList.get(ip).getStatusString());
+		}
+		System.out.println("=================================");
 	}
 
 	private static void sendToAll()
