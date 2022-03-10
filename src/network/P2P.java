@@ -17,6 +17,7 @@ public class P2P
 	private static final int MAX_TIME = 10;
 	
 	private static Hashtable <String, IPEntry> nodeList = new Hashtable<>();
+	private static Hashtable<String, IPEntry> recievedList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs; 
 	private static String myIP;
 	private static DatagramSocket socket;
@@ -42,6 +43,7 @@ public class P2P
 		
 		//Our initial heartbeat
 		sendToAll();
+		printNodesStatus();
 		
 		while (true)
 		{
@@ -49,6 +51,7 @@ public class P2P
 			{
 				sendToAll();
 			}
+			
 			//when the timer expires, send to all knownIP, reset timer and random timer
 			if (timer == MAX_TIME)
 			{
@@ -74,31 +77,28 @@ public class P2P
 				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
 				
 				
-				Hashtable<String, IPEntry> temp = recievedMessage.getnodeList();
-				Set<String> tempSetOfNodeIPs = temp.keySet(); 
+				recievedList = recievedMessage.getnodeList();
 				
-				
-				for (String tempNodeIP : tempSetOfNodeIPs)
+				if (recievedList != null)
 				{
-					if(temp.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+					Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
+					
+					for (String tempNodeIP : tempSetOfNodeIPs)
 					{
-						nodeList.get(tempNodeIP).setIsAlive(temp.get(tempNodeIP).getIsAlive());
+						if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+						{
+							nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+						}
 					}
 				}
-				
-				//set recieved ip status to alive
-				nodeList.get(recievedPacket.getAddress().toString().substring(1)).setIsAlive(true);
-			
-		
-				
-				
-				
 			} catch (IOException e)
 			{
 				timer++;
 				System.out.println(timer + "\t No message recieved");
 				continue;
 			}	
+			
+			timer++;
 		}
 		
 	}
