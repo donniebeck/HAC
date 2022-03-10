@@ -82,6 +82,7 @@ public class P2P
 				{
 					IPEntry newNode = new IPEntry(true);
 					nodeList.put(tempIPString, newNode);
+					setOfNodeIPs = nodeList.keySet();
 				}
 				
 				if(recievedMessage.getisFirstHeartbeat())
@@ -100,8 +101,13 @@ public class P2P
 							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
 							{
-								System.out.println(tempNodeIP + ":" + recievedList.get(tempNodeIP).getIsAlive());
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+							}
+							if (!nodeList.contains(tempNodeIP))
+							{
+								IPEntry newNode = new IPEntry(true);
+								nodeList.put(tempNodeIP, newNode);
+								setOfNodeIPs = nodeList.keySet();
 							}
 						}
 					}
