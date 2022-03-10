@@ -98,16 +98,16 @@ public class P2P
 						
 						for (String tempNodeIP : tempSetOfNodeIPs)
 						{
-							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
-									!tempNodeIP.equals(myIP))
-							{
-								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-							}
 							if (!nodeList.contains(tempNodeIP))
 							{
 								IPEntry newNode = new IPEntry(true);
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
+							} 
+							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
+									!tempNodeIP.equals(myIP))
+							{
+								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 							}
 						}
 					}
