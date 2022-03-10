@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Hashtable;
+import java.util.Set;
 import java.util.Vector;
 
 
@@ -30,6 +31,7 @@ public class Message implements Serializable
     private boolean isHeartbeat;
     private String text;
     private Hashtable <String, IPEntry> nodeList;
+    private static Set<String> setOfNodeIPs; 
     
     // The Message constructor.
     public Message(boolean isP2P, boolean isHeartbeat, String text, Hashtable<String, IPEntry> nodeList) 
@@ -39,6 +41,10 @@ public class Message implements Serializable
     	this.isHeartbeat = isHeartbeat; 
         this.text = text;  // The information this variable contains
         this.nodeList = nodeList; // The IP or IP lists the message may contain.
+        if(nodeList != null)
+        {
+        	this.setOfNodeIPs = nodeList.keySet();
+        }
     }
     
     /**
@@ -169,5 +175,13 @@ public class Message implements Serializable
       // And we start to pack them with host IP address and port number
       DatagramPacket outPacket = new DatagramPacket(requestbuffer, requestbuffer.length, hostIP, port);
       return outPacket;
+    }
+    
+    public void updateTimestamp()
+    {
+    	for (String ip : setOfNodeIPs)
+		{
+    		nodeList.get(ip).setTimeStampNow();
+		}
     }
 }

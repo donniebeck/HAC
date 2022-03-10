@@ -27,6 +27,11 @@ public class IPEntry implements Serializable
 	{
 		this.timeStamp = timeStamp;
 	}
+	
+	public void setTimeStampNow()
+	{
+		this.timeStamp = LocalDateTime.now();
+	}
 
 	public IPEntry(Boolean status)
 	{

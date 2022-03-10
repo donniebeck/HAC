@@ -122,6 +122,7 @@ public class P2P
 			{
 				try
 				{
+					message.updateTimestamp();
 					DatagramPacket packet = message.createPacket(InetAddress.getByName(ip), PORT_NO);
 					socket.send(packet);
 				} catch (IOException e)
