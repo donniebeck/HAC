@@ -29,7 +29,7 @@ public class P2P
 		createSocket();
 		
 		//Starting our timer
-		int timer = MAX_TIME;
+		int timer = 0;
 		
 		//Setting up our buffer and dummy message to load data into
 		byte[]  buffer = new byte[65508];
