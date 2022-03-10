@@ -39,7 +39,9 @@ public class P2P
 		//Setting up our random message timer
 		Random rand = new Random();
 		int randomTimer = rand.nextInt(MAX_TIME-1);
-
+		
+		//Our initial heartbeat
+		sendToAll();
 		
 		while (true)
 		{
@@ -50,6 +52,8 @@ public class P2P
 			//when the timer expires, send to all knownIP, reset timer and random timer
 			if (timer == MAX_TIME)
 			{
+				
+				
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
 				sendToAll();
@@ -69,9 +73,10 @@ public class P2P
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
 				System.out.println(recievedPacket.getAddress() + " : " + recievedMessage.getText());
 				
+				//set recieved ip status to alive
+				nodeList.get(recievedPacket.getAddress().toString().substring(1)).setIsAlive(true);
 				
-				
-				
+		
 				
 				
 				
