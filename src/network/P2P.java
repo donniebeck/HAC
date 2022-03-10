@@ -85,7 +85,8 @@ public class P2P
 					
 					for (String tempNodeIP : tempSetOfNodeIPs)
 					{
-						if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+						if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
+								!tempNodeIP.equals(myIP))
 						{
 							nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 						}
