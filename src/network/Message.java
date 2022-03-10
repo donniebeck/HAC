@@ -26,18 +26,18 @@ public class Message implements Serializable
 	// Message properties.
 	private double version = 1.0;
 	private boolean isP2P;
-    private boolean isHeartbeating;
+    private boolean isHeartbeat;
     private String text;
-    private Vector<InetAddress> IPlist;
+    private Vector<IPEntry> nodeList;
     
     // The Message constructor.
-    public Message(boolean isP2P, boolean isHeartbeating, String text, Vector<InetAddress> IPs) 
+    public Message(boolean isP2P, boolean isHeartbeat, String text, Vector<IPEntry> nodeList) 
     {
     	
     	this.isP2P = isP2P;  //True: P2P, False: Client-Server
-    	this.isHeartbeating = isHeartbeating; 
+    	this.isHeartbeat = isHeartbeat; 
         this.text = text;  // The information this variable contains
-        this.IPlist = IPs; // The IP or IP lists the message may contain.
+        this.nodeList = nodeList; // The IP or IP lists the message may contain.
     }
     
     /**
@@ -62,9 +62,9 @@ public class Message implements Serializable
      * get of IP list
      * @return the IPlist in the message
      */
-    public Vector<InetAddress> getIPList() 
+    public Vector<IPEntry> getnodeList() 
     {
-      return this.IPlist;
+      return this.nodeList;
     }
 
     /**
@@ -80,9 +80,9 @@ public class Message implements Serializable
      * get the usage of a this message
      * @return the boolean value of Heartbeat of the message
      */
-    public boolean getHeartbeating() 
+    public boolean getHeartbeat() 
     {
-      return this.isHeartbeating;
+      return this.isHeartbeat;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Message implements Serializable
      */
     public void setMeaning(boolean meaning) 
     {
-      this.isHeartbeating = meaning;
+      this.isHeartbeat = meaning;
     }
     
     
@@ -112,7 +112,7 @@ public class Message implements Serializable
     private byte[] serializedMessage() 
     {
 		// Create a new message object to be serialized.
-	    Message serialMessageObj = new Message(this.isP2P, this.isHeartbeating, this.text, this.IPlist);
+	    Message serialMessageObj = new Message(this.isP2P, this.isHeartbeat, this.text, this.nodeList);
         
         // Serialize the message to be fitted into a buffer
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
