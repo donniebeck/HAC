@@ -75,8 +75,14 @@ public class P2P
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				System.out.println(recievedPacket.getAddress().toString().substring(1) + " : " + recievedMessage.getText());
+				String tempIPString = recievedPacket.getAddress().toString().substring(1);
+				System.out.println(tempIPString + " : " + recievedMessage.getText());
 				
+				if(!nodeList.containsKey(tempIPString))
+				{
+					IPEntry newNode = new IPEntry(true);
+					nodeList.put(tempIPString, newNode);
+				}
 				
 				if(recievedMessage.getisFirstHeartbeat())
 				{
