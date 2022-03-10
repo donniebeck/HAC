@@ -5,8 +5,21 @@ import java.time.LocalDateTime;
 
 public class IPEntry implements Serializable
 {
+	final int TTL = 10;
 	Boolean isAlive;
 	LocalDateTime timeStamp;
+	int timeToLive;
+	
+
+	public int getTimeToLive()
+	{
+		return timeToLive;
+	}
+
+	public void setTimeToLive(int timeToLive)
+	{
+		this.timeToLive = timeToLive;
+	}
 
 	public Boolean getIsAlive() 
 	{
@@ -37,6 +50,7 @@ public class IPEntry implements Serializable
 	{
 		this.isAlive = status;
 		this.timeStamp = LocalDateTime.now();
+		this.timeToLive = TTL;
 	}
 	
 	public String getStatusString()

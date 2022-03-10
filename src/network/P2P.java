@@ -62,9 +62,9 @@ public class P2P
 				printNodesStatus();
 				for (String ip : setOfNodeIPs)
 				{
-					if(!ip.equals(myIP))
+					if(!ip.equals(myIP) &&(nodeList.get(ip).getTimeToLive() <= 0)  )
 					{
-					nodeList.get(ip).setIsAlive(false);
+						nodeList.get(ip).setIsAlive(false);
 					}
 				}
 			}
@@ -76,6 +76,7 @@ public class P2P
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
 				System.out.println(recievedPacket.getAddress().toString().substring(1) + " : " + recievedMessage.getText());
+				
 				
 				if(recievedMessage.getisFirstHeartbeat())
 				{
@@ -107,6 +108,10 @@ public class P2P
 			}	
 			
 			timer++;
+			for (String ip : setOfNodeIPs)
+			{
+				nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
+			}
 		}
 		
 	}
