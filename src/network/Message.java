@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.util.Hashtable;
 import java.util.Vector;
 
 
@@ -28,10 +29,10 @@ public class Message implements Serializable
 	private boolean isP2P;
     private boolean isHeartbeat;
     private String text;
-    private Vector<IPEntry> nodeList;
+    private Hashtable <String, IPEntry> nodeList;
     
     // The Message constructor.
-    public Message(boolean isP2P, boolean isHeartbeat, String text, Vector<IPEntry> nodeList) 
+    public Message(boolean isP2P, boolean isHeartbeat, String text, Hashtable<String, IPEntry> nodeList) 
     {
     	
     	this.isP2P = isP2P;  //True: P2P, False: Client-Server
@@ -62,7 +63,7 @@ public class Message implements Serializable
      * get of IP list
      * @return the IPlist in the message
      */
-    public Vector<IPEntry> getnodeList() 
+    public Hashtable<String, IPEntry> getnodeList() 
     {
       return this.nodeList;
     }
