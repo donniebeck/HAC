@@ -18,7 +18,7 @@ public class P2P
 	
 	private static Hashtable <String, IPEntry> nodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs; 
-	private static String myIP = "/";
+	private static String myIP;
 	private static DatagramSocket socket;
 	private static Message message = new Message(true, true, "Hello, this is a client ", nodeList);
 	
@@ -122,7 +122,7 @@ public class P2P
 	{
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
-		myIP += configReader.getSingleIP("myIP.txt");
+		myIP = configReader.getSingleIP("myIP.txt");
 		
 		//Load all IPs into hashtable from txt file
 		String ipList[] = configReader.getIPListFromFile("ipList.txt");
