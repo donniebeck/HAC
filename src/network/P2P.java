@@ -43,7 +43,7 @@ public class P2P
 		
 		//Our initial heartbeat
 		sendToAll();
-		message.setIsFirstHeartbeat(false);
+		message.setIsSimple(false);
 		printNodesStatus();
 		
 		while (true)
@@ -86,7 +86,7 @@ public class P2P
 					setOfNodeIPs = nodeList.keySet();
 				}
 				
-				if(recievedMessage.getisFirstHeartbeat())
+				if(recievedMessage.getisSimple())
 				{
 					nodeList.get(recievedIPString).setIsAlive(true);
 				}
