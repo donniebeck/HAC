@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class Server
 	
 	
 	private static Hashtable <String, IPEntry> clientList = new Hashtable<>();
-	private static Set<String> setOfClientIPs; 
+	private static Set<String> setOfClientIPs = new HashSet<String>(); 
 	private static Message message = new Message(false, false, "Hello, this is the server ", clientList);
 
 	public static void main(String[] args)
@@ -41,18 +42,15 @@ public class Server
 			if(timer == MAX_TIME)
 			{
 				timer = 0;
-				if(setOfClientIPs!=null)
+				for(String ip : setOfClientIPs)
 				{
-					for(String ip : setOfClientIPs)
+					if (clientList.get(ip).getTimeToLive() <= 0)
 					{
-						if (clientList.get(ip).getTimeToLive() <= 0)
-						{
-							clientList.get(ip).setIsAlive(false);
-						}
+						clientList.get(ip).setIsAlive(false);
 					}
-					printClientStatus();
-					sendToAll();
 				}
+				printClientStatus();
+				sendToAll();
 			}
 			
 			
@@ -80,13 +78,10 @@ public class Server
 			
 			
 			timer++;
-			if(setOfClientIPs!=null)
-			{
 				for (String ip : setOfClientIPs)
 				{
 					clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);
 				}
-			}
 		}
 		
 		

@@ -58,8 +58,6 @@ public class P2P
 			{
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
-				sendToAll();
-				printNodesStatus();
 				for (String ip : setOfNodeIPs)
 				{
 					if(!ip.equals(myIP) &&(nodeList.get(ip).getTimeToLive() <= 0)  )
@@ -67,6 +65,8 @@ public class P2P
 						nodeList.get(ip).setIsAlive(false);
 					}
 				}
+				sendToAll();
+				printNodesStatus();
 			}
 			
 			
@@ -75,29 +75,29 @@ public class P2P
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				String tempIPString = recievedPacket.getAddress().toString().substring(1);
-				System.out.println(tempIPString + " : " + recievedMessage.getText());
+				String recievedIPString = recievedPacket.getAddress().toString().substring(1);
+				System.out.println(recievedIPString + " : " + recievedMessage.getText());
 				
 				//if the sender is unknown to this host, add it to its list
-				if(!nodeList.containsKey(tempIPString))
+				if(!nodeList.containsKey(recievedIPString))
 				{
 					IPEntry newNode = new IPEntry(true);
-					nodeList.put(tempIPString, newNode);
+					nodeList.put(recievedIPString, newNode);
 					setOfNodeIPs = nodeList.keySet();
 				}
 				
 				if(recievedMessage.getisFirstHeartbeat())
 				{
-					nodeList.get(tempIPString).setIsAlive(true);
+					nodeList.get(recievedIPString).setIsAlive(true);
 				}
 				else
 				{
 					recievedList = recievedMessage.getnodeList();
 					if (recievedList != null)
 					{
-						Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
+						Set<String> recievedSetOfNodeIPs = recievedList.keySet(); 
 						
-						for (String tempNodeIP : tempSetOfNodeIPs)
+						for (String tempNodeIP : recievedSetOfNodeIPs)
 						{
 							if (!setOfNodeIPs.contains(tempNodeIP))
 							{
@@ -105,8 +105,8 @@ public class P2P
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-							} else
-							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
+							} 
+							else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
 							{
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
@@ -116,13 +116,7 @@ public class P2P
 				}
 			} catch (IOException e)
 			{
-				timer++;
-				for (String ip : setOfNodeIPs)
-				{
-					nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
-				}
 				System.out.println(timer + "\t No message recieved");
-				continue;
 			}	
 			
 			timer++;
