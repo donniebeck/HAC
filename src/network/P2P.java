@@ -103,7 +103,8 @@ public class P2P
 								IPEntry newNode = new IPEntry(true);
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
-							} 
+								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+							} else
 							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
 							{
