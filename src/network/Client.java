@@ -13,8 +13,7 @@ public class Client {
 	public static int PORT = 9876;
 	public static String SERVERIPSTRING = "150.243.192.195";
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
-	private static Set<String> setOfNodeIPsPrint; 
-	private static Set<String> setOfNodeIPs; 
+	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
 	
 	
 	public static void heartbeatToServer(Message requestMessage) {
@@ -54,18 +53,8 @@ public class Client {
 
 			responsemessage = responsemessage.deserializer(response);
 
-			updateNodes(knownNodeList);
-			setOfNodeIPsPrint = knownNodeList.keySet();
+			updateNodes(responsemessage.getnodeList());
 			
-			
-			
-			System.out.println("The server responsed with those ips:");
-			for(String ip: setOfNodeIPsPrint)
-			{
-				System.out.println(ip);
-			}
-			
-//			System.out.println(responsemessage.getText());
 			flag = false;
 		}
 			
@@ -129,8 +118,19 @@ public class Client {
 	public static void main(String[] args) throws InterruptedException {
 		findServerIP();
 		openSocket();
-		Message requestInfo= new Message(false, true, "This is the client", null);
-		heartbeatToServer(requestInfo);
+		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
+		// The first heart beat.
+		heartbeatToServer(heartbeat);
+		
+		System.out.println("The server responsed with those ips and their status:");
+		for(String ip: setOfNodeIPs)
+		{
+			System.out.println("=================================");
 
+				System.out.println(ip + knownNodeList.get(ip).getStatusString());
+				
+			System.out.println("=================================");
+		}
+		
 	}
 }
