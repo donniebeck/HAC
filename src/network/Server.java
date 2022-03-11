@@ -34,11 +34,8 @@ public class Server
 		Message recievedMessage = new Message(false, false, "", null);
 		
 		
-		
-		
 		while(true)
 		{
-			
 			if(timer == MAX_TIME)
 			{
 				timer = 0;
@@ -52,7 +49,6 @@ public class Server
 				printClientStatus();
 				sendToAll();
 			}
-			
 			
 			
 			try
@@ -78,14 +74,11 @@ public class Server
 			
 			
 			timer++;
-				for (String ip : setOfClientIPs)
-				{
-					clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);
-				}
+			for (String ip : setOfClientIPs)
+			{
+				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);
+			}
 		}
-		
-		
-
 	}
 
 
@@ -116,8 +109,6 @@ public class Server
 		}
 		System.out.println("=================================");
 	}
-
-
 
 	private static void createSocket()
 	{
