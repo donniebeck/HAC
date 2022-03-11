@@ -8,11 +8,12 @@ import java.util.*;
 
 public class Client {
 	public static DatagramSocket clientsocket = null;
-	public static InetAddress myIP;
+	public static String myIP = "150.243.144.254";
 	public static InetAddress serverIP;
 	public static int PORT = 9876;
-	public static String IPSTRING = "150.243.192.195";
-	private static Hashtable<String, IPEntry> knownIPList = new Hashtable<>();
+	public static String SERVERIPSTRING = "150.243.192.195";
+	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
+	private static Set<String> setOfNodeIPsPrint; 
 	private static Set<String> setOfNodeIPs; 
 	
 	
@@ -22,7 +23,7 @@ public class Client {
 		try 
 		{
 			clientsocket.send(request);
-			System.out.println("sending to" + serverIP.getHostAddress());
+			System.out.println("sending to: " + serverIP.getHostAddress());
 		}
 		catch (IOException e) 
 		{
@@ -49,36 +50,65 @@ public class Client {
 			}
 			//Output the text of the response packet from server.
 			
-			Message responsemessage = new Message(false, true, "", knownIPList);
+			Message responsemessage = new Message(false, true, "", knownNodeList);
 
 			responsemessage = responsemessage.deserializer(response);
 
-			knownIPList = responsemessage.getnodeList();
-			setOfNodeIPs = knownIPList.keySet();
-			for(String ip: setOfNodeIPs)
+			updateNodes(knownNodeList);
+			setOfNodeIPsPrint = knownNodeList.keySet();
+			
+			
+			
+			System.out.println("The server responsed with those ips:");
+			for(String ip: setOfNodeIPsPrint)
 			{
 				System.out.println(ip);
 			}
 			
-			System.out.println(responsemessage.getText());
+//			System.out.println(responsemessage.getText());
 			flag = false;
 		}
 			
 	}
 	
 	
-	public static InetAddress findServerIP() 
+	public static void updateNodes(Hashtable <String, IPEntry> recievedList)
+	{
+		if (knownNodeList != null)
+		{
+			Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
+			
+			for (String tempNodeIP : tempSetOfNodeIPs)
+			{
+				if (!setOfNodeIPs.contains(tempNodeIP))
+				{
+					IPEntry newNode = new IPEntry(true);
+					knownNodeList.put(tempNodeIP, newNode);
+					setOfNodeIPs = knownNodeList.keySet();
+					knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+				} 
+				else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(knownNodeList.get(tempNodeIP).getTimeStamp()) &&
+						!tempNodeIP.equals(myIP))
+				{
+					knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+				}
+			}
+		}
+	}
+	
+	public static void findServerIP() 
 	{
 		// Find the IP address of server node.
 		InetAddress hostaddress = null;
-		try {
-			hostaddress = InetAddress.getByName(IPSTRING);
+		try 
+		{
+			hostaddress = InetAddress.getByName(SERVERIPSTRING);
 		} 
-		catch (UnknownHostException e) {
+		catch (UnknownHostException e) 
+		{
 			e.printStackTrace();
 		}
-
-		return hostaddress;
+		serverIP = hostaddress;
 	}
 	
 
@@ -101,5 +131,6 @@ public class Client {
 		openSocket();
 		Message requestInfo= new Message(false, true, "This is the client", null);
 		heartbeatToServer(requestInfo);
+
 	}
 }
