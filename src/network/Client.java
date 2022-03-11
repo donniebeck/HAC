@@ -14,6 +14,7 @@ public class Client {
 	public static String SERVERIPSTRING = "150.243.192.195";
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
+	private static int MAX_TIME = 20;
 	
 	
 	public static void heartbeatToServer(Message requestMessage) {
@@ -36,28 +37,21 @@ public class Client {
 		// Immediately catch the server's response, and discard it(run a loop to make
 		// sure it is done)
 		boolean flag = true;
-		while (flag) 
+		Message responsemessage = new Message(false, true, "", knownNodeList);
+		
+		try 
 		{
-			try 
-			{
-				clientsocket.receive(response);
-			} 
-			catch (IOException e) 
-			{
-				e.printStackTrace();
-				continue;
-			}
-			//Output the text of the response packet from server.
-			
-			Message responsemessage = new Message(false, true, "", knownNodeList);
-
-			responsemessage = responsemessage.deserializer(response);
-
-			updateNodes(responsemessage.getnodeList());
-			
-			flag = false;
+			clientsocket.receive(response);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
 		}
-			
+		//Output the text of the response packet from server.
+
+		responsemessage = responsemessage.deserializer(response);
+
+		updateNodes(responsemessage.getnodeList());
 	}
 	
 	
@@ -102,14 +96,15 @@ public class Client {
 	
 
 	//The function to open the client socket.
-	public static void openSocket() 
+	private static void createSocket()
 	{
-		try 
+		try
 		{
 			clientsocket = new DatagramSocket(PORT);
-		} 
-		catch (SocketException e) 
+			clientsocket.setSoTimeout(1000);
+		} catch (SocketException e)
 		{
+			System.out.println("The datagram socket could not be created");
 			e.printStackTrace();
 		}
 	}
@@ -117,20 +112,31 @@ public class Client {
 	
 	public static void main(String[] args) throws InterruptedException {
 		findServerIP();
-		openSocket();
+		createSocket();
+		
 		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
-		// The first heart beat.
-		heartbeatToServer(heartbeat);
 		
-		System.out.println("The server responsed with those ips and their status:");
-		for(String ip: setOfNodeIPs)
+		int timer = 0;
+		while (true)
 		{
-			System.out.println("=================================");
-
-				System.out.println(ip + knownNodeList.get(ip).getStatusString());
-				
-			System.out.println("=================================");
-		}
+			System.out.println(timer);
+			if (timer == 7)
+			{
+				timer = 0;
+				heartbeatToServer(heartbeat);
+				System.out.println("=================================");
+				System.out.println("The server responsed with those ips and their status:");
+				for(String ip: setOfNodeIPs)
+				{
 		
+						System.out.println(ip + knownNodeList.get(ip).getStatusString());
+			
+				}	
+				System.out.println("=================================");
+			}
+			
+			Thread.sleep(1000);
+			timer++;
+		}
 	}
 }
