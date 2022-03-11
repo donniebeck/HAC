@@ -117,6 +117,10 @@ public class P2P
 			} catch (IOException e)
 			{
 				timer++;
+				for (String ip : setOfNodeIPs)
+				{
+					nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
+				}
 				System.out.println(timer + "\t No message recieved");
 				continue;
 			}	
