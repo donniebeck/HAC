@@ -99,12 +99,13 @@ public class P2P
 						
 						for (String tempNodeIP : tempSetOfNodeIPs)
 						{
-							if (!nodeList.contains(tempNodeIP))
+							if (!setOfNodeIPs.contains(tempNodeIP))
 							{
 								IPEntry newNode = new IPEntry(true);
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+								System.out.println(tempNodeIP + " says it is " + recievedList.get(tempNodeIP).getIsAlive()) ;
 							} else
 							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
