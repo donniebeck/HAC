@@ -105,7 +105,6 @@ public class P2P
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-								System.out.println(tempNodeIP + " says it is " + recievedList.get(tempNodeIP).getIsAlive()) ;
 							} else
 							if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
