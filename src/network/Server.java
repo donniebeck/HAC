@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class Server
 	
 	
 	private static Hashtable <String, IPEntry> clientList = new Hashtable<>();
-	private static Set<String> setOfClientIPs; 
+	private static Set<String> setOfClientIPs = new HashSet<String>(); 
 	private static Message message = new Message(false, false, "Hello, this is the server ", clientList);
 
 	public static void main(String[] args)
