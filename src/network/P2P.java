@@ -78,6 +78,7 @@ public class P2P
 				String tempIPString = recievedPacket.getAddress().toString().substring(1);
 				System.out.println(tempIPString + " : " + recievedMessage.getText());
 				
+				//if the sender is unknown to this host, add it to its list
 				if(!nodeList.containsKey(tempIPString))
 				{
 					IPEntry newNode = new IPEntry(true);
@@ -87,7 +88,7 @@ public class P2P
 				
 				if(recievedMessage.getisFirstHeartbeat())
 				{
-					nodeList.get(recievedPacket.getAddress().toString().substring(1)).setIsAlive(true);
+					nodeList.get(tempIPString).setIsAlive(true);
 				}
 				else
 				{
