@@ -174,7 +174,7 @@ public class Client {
 			if (blackOutTimer >= MAX_TIME*1.5)
 			{
 
-				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get() == myIP)
+				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get().equals(myIP))
 				{
 					System.out.println("Taking over as server");
 					setOfNodeIPs.remove(myIP);

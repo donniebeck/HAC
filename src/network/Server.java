@@ -77,7 +77,7 @@ public class Server
 					setOfClientIPs.add(tempIPString);
 				}
 				clientList.get(tempIPString).setIsAlive(true);
-				clientList.get(tempIPString).setTimeToLive(MAX_TIME);
+				clientList.get(tempIPString).setTimeToLive(MAX_TIME*2);
 				sendToAll();
 			} catch (IOException e)
 			{
