@@ -133,6 +133,7 @@ public class Client {
 		int randomTimer = rand.nextInt(MAX_TIME-1);
 		
 		int timer = 0;
+		int blackOutTimer = 0;
 		while (true)
 		{
 			if(timer == randomTimer)
@@ -147,23 +148,29 @@ public class Client {
 				sendToServer(request);
 			}
 			
+			if (blackOutTimer == MAX_TIME*1.5)
+			{
+				//if myIP is first, take over
+				//if not, change serverIP to first elemenet
+			}
+			
 			try 
 			{
 				clientsocket.receive(response);
 				responsemessage = responsemessage.deserializer(response);
 				updateNodes(responsemessage.getnodeList());
+				blackOutTimer = 0;
 				System.out.println("=================================");
 				for(String ip: setOfNodeIPs)
 				{
-		
-						System.out.println(ip + knownNodeList.get(ip).getStatusString());
-			
+					System.out.println(ip + knownNodeList.get(ip).getStatusString());
 				}	
 				System.out.println("=================================");
 			} 
 			catch (IOException e) 
 			{
-				System.out.println(timer + "\tNo response from server");
+				System.out.println(timer + "\tNo message recieved");
+				blackOutTimer++;
 			}
 			timer++;
 		}
