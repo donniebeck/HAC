@@ -19,7 +19,9 @@ public class Server
 	
 	private static Hashtable <String, IPEntry> clientList = new Hashtable<>();
 	private static Set<String> setOfClientIPs = new HashSet<String>(); 
-	private static Message message = new Message(false, false, "Hello, this is the server ", clientList);
+	private static String myIP;
+	private static Message message = new Message(false, false, myIP, "Hello, this is the server ", clientList);
+	
 
 	public static void main(String[] args)
 	{
@@ -29,11 +31,17 @@ public class Server
 	public Server()
 	{
 	}
-
+	public static void loadIPs() 
+	{
+		//Load myIP from txt file
+		ConfigReader configReader = new ConfigReader();
+		myIP = configReader.getSingleIP("myIP.txt");
+	}
 
 	public static void runServer()
 	{
 		createSocket();
+		loadIPs();
 		
 		//Starting our timer
 		int timer = 0;
@@ -41,7 +49,7 @@ public class Server
 		//Setting up our buffer and dummy message to load data into
 		byte[]  buffer = new byte[65508];
 		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
-		Message recievedMessage = new Message(false, false, "", null);
+		Message recievedMessage = new Message(false, false, myIP,"", null);
 		
 		
 		while(true)
@@ -65,7 +73,7 @@ public class Server
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				String tempIPString = recievedPacket.getAddress().toString().substring(1);
+				String tempIPString = recievedMessage.getSenderIP();
 				System.out.println(tempIPString + " : " + recievedMessage.getText());
 				
 				if(!setOfClientIPs.contains(tempIPString))

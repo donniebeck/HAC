@@ -21,7 +21,7 @@ public class P2P
 	private static Set<String> setOfNodeIPs; 
 	private static String myIP;
 	private static DatagramSocket socket;
-	private static Message message = new Message(true, true, "Hello, this is a client ", nodeList);
+	private static Message message = new Message(true, true, myIP, "Hello, this is a client ", nodeList);
 	
 
 	public static void main(String[] args)
@@ -35,7 +35,7 @@ public class P2P
 		//Setting up our buffer and dummy message to load data into
 		byte[]  buffer = new byte[65508];
 		DatagramPacket recievedPacket = new DatagramPacket(buffer, buffer.length);
-		Message recievedMessage = new Message(false, false, "", null);
+		Message recievedMessage = new Message(false, false, "","", null);
 		
 		//Setting up our random message timer
 		Random rand = new Random();
@@ -75,7 +75,7 @@ public class P2P
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
-				String recievedIPString = recievedPacket.getAddress().toString().substring(1);
+				String recievedIPString = recievedMessage.getSenderIP();
 				System.out.println(recievedIPString + " : " + recievedMessage.getText());
 				
 				//if the sender is unknown to this host, add it to its list

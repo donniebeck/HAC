@@ -73,7 +73,7 @@ public class Client {
 		// Packet variable for receiving and holding server's response
 		byte[] responsebuffer = new byte[65508];
 		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
-		Message responsemessage = new Message(false, true, "", knownNodeList);
+		Message responsemessage = new Message(false, true, "","", knownNodeList);
 		
 		//Setting up our random message timer
 		Random rand = new Random();
@@ -161,7 +161,7 @@ public class Client {
 
 	private static void sendToServer()
 	{
-		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
+		Message heartbeat= new Message(false, true, myIP, "Hi, This is the client", null);
 		DatagramPacket request = heartbeat.createPacket(serverIP, PORT);
 		try 
 		{
