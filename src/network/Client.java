@@ -15,70 +15,10 @@ public class Client {
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
 	private static int MAX_TIME = 20;
 	
-	
-//	public static void heartbeatToServer(Message requestMessage) {
-//		DatagramPacket request = requestMessage.createPacket(serverIP, PORT);
-//		
-//		try 
-//		{
-//			clientsocket.send(request);
-//			System.out.println("sending to: " + serverIP.getHostAddress());
-//		}
-//		catch (IOException e) 
-//		{
-//			e.printStackTrace();
-//		}
-//		
-//		// Packet variable for receiving and holding server's response
-//		byte[] responsebuffer = new byte[65508];
-//		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
-//		
-//		// Immediately catch the server's response, and discard it(run a loop to make
-//		// sure it is done)
-//		boolean flag = true;
-//		Message responsemessage = new Message(false, true, "", knownNodeList);
-//		
-//		try 
-//		{
-//			clientsocket.receive(response);
-//		} 
-//		catch (IOException e) 
-//		{
-//			e.printStackTrace();
-//		}
-//		//Output the text of the response packet from server.
-//
-//		responsemessage = responsemessage.deserializer(response);
-//
-//		updateNodes(responsemessage.getnodeList());
-//	}
-//	
-	
 	public static void updateNodes(Hashtable <String, IPEntry> recievedList)
 	{
-		if (recievedList != null)
-		{
-			Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
-			
-			for (String tempNodeIP : tempSetOfNodeIPs)
-			{
-				if (!setOfNodeIPs.contains(tempNodeIP))
-				{
-					IPEntry newNode = new IPEntry(true);
-					knownNodeList.put(tempNodeIP, newNode);
-					setOfNodeIPs = knownNodeList.keySet();
-					if(!tempNodeIP.equals(myIP))
-					{
-						knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-					}
-				} 
-				else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(knownNodeList.get(tempNodeIP).getTimeStamp()) &&
-						!tempNodeIP.equals(myIP))
-				{
-					knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-				}
-			}
-		}
+		setOfNodeIPs = recievedList.keySet(); 
+		knownNodeList = recievedList;
 	}
 	
 	public static void loadIPs() 
@@ -177,7 +117,6 @@ public class Client {
 				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get().equals(myIP))
 				{
 					System.out.println("Taking over as server");
-					setOfNodeIPs.remove(myIP);
 					knownNodeList.remove(myIP);
 					serverIsUp = false;
 				}
