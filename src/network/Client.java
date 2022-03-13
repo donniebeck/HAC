@@ -8,10 +8,9 @@ import java.util.*;
 
 public class Client {
 	public static DatagramSocket clientsocket = null;
-	public static String myIP = "150.243.144.67";
+	public static String myIP;
 	public static InetAddress serverIP;
 	public static int PORT = 9876;
-	public static String SERVERIPSTRING = "150.243.193.236";
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
 	private static int MAX_TIME = 20;
@@ -57,7 +56,7 @@ public class Client {
 	
 	public static void updateNodes(Hashtable <String, IPEntry> recievedList)
 	{
-		if (knownNodeList != null)
+		if (recievedList != null)
 		{
 			Set<String> tempSetOfNodeIPs = recievedList.keySet(); 
 			
@@ -79,13 +78,17 @@ public class Client {
 		}
 	}
 	
-	public static void findServerIP() 
+	public static void loadIPs() 
 	{
+		//Load myIP from txt file
+		ConfigReader configReader = new ConfigReader();
+		myIP = configReader.getSingleIP("myIP.txt");
+		
 		// Find the IP address of server node.
 		InetAddress hostaddress = null;
 		try 
 		{
-			hostaddress = InetAddress.getByName(SERVERIPSTRING);
+			hostaddress = InetAddress.getByName(configReader.getSingleIP("serverIP.txt"));
 		} 
 		catch (UnknownHostException e) 
 		{
@@ -110,8 +113,11 @@ public class Client {
 	}
 	
 	
-	public static void main(String[] args) throws InterruptedException {
-		findServerIP();
+	
+	
+	public static void main(String[] args) throws InterruptedException 
+	{
+		loadIPs();
 		createSocket();
 		
 		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
@@ -120,45 +126,33 @@ public class Client {
 		// Packet variable for receiving and holding server's response
 		byte[] responsebuffer = new byte[65508];
 		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
+		Message responsemessage = new Message(false, true, "", knownNodeList);
+		
+		//Setting up our random message timer
+		Random rand = new Random();
+		int randomTimer = rand.nextInt(MAX_TIME-1);
 		
 		int timer = 0;
 		while (true)
 		{
-			System.out.println(timer);
-			if (timer == 7)
+			if(timer == randomTimer)
+			{
+				sendToServer(request);
+			}
+			
+			if (timer == MAX_TIME)
 			{
 				timer = 0;
-				
-				try 
-				{
-					clientsocket.send(request);
-					System.out.println("sending to: " + serverIP.getHostAddress());
-				}
-				catch (IOException e) 
-				{
-					e.printStackTrace();
-				}
-				
-				// Immediately catch the server's response, and discard it(run a loop to make
-				// sure it is done)
-				Message responsemessage = new Message(false, true, "", knownNodeList);
-				
-				try 
-				{
-					clientsocket.receive(response);
-				} 
-				catch (IOException e) 
-				{
-					System.out.println("No immediate response server");
-					e.printStackTrace();
-				}
-				//Output the text of the response packet from server.
-		
+				randomTimer = rand.nextInt(MAX_TIME-1);
+				sendToServer(request);
+			}
+			
+			try 
+			{
+				clientsocket.receive(response);
 				responsemessage = responsemessage.deserializer(response);
-		
 				updateNodes(responsemessage.getnodeList());
 				System.out.println("=================================");
-				System.out.println("The server responsed with those ips and their status:");
 				for(String ip: setOfNodeIPs)
 				{
 		
@@ -166,10 +160,25 @@ public class Client {
 			
 				}	
 				System.out.println("=================================");
+			} 
+			catch (IOException e) 
+			{
+				System.out.println(timer + "\tNo response from server");
 			}
-			
-			Thread.sleep(1000);
 			timer++;
+		}
+	}
+
+	private static void sendToServer(DatagramPacket request)
+	{
+		try 
+		{
+			clientsocket.send(request);
+			System.out.println("sending to: " + serverIP.getHostAddress());
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
 		}
 	}
 }

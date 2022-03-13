@@ -77,7 +77,7 @@ public class Server
 			for (String ip : setOfClientIPs)
 			{
 				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);
-			}
+				System.out.println(ip + " : ttl = "+clientList.get(ip).getTimeToLive());			}
 		}
 	}
 
