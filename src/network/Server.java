@@ -97,7 +97,8 @@ public class Server
 			timer++;
 			for (String ip : setOfClientIPs)
 			{
-				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);		}
+				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);		
+			}
 		}
 	}
 

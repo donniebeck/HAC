@@ -164,7 +164,7 @@ public class Client {
 
 	private static void sendToServer()
 	{
-		Message heartbeat= new Message(false, true, myIP, "Hi, This is the client", null);
+		Message heartbeat= new Message(false, true, "Hi, This is the client", myIP, null);
 		DatagramPacket request = heartbeat.createPacket(serverIP, PORT);
 		try 
 		{
