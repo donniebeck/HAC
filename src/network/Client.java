@@ -13,7 +13,7 @@ public class Client {
 	public static int PORT = 9876;
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
-	private static int MAX_TIME = 5;
+	private static int MAX_TIME = 20;
 	
 	
 //	public static void heartbeatToServer(Message requestMessage) {
@@ -67,7 +67,10 @@ public class Client {
 					IPEntry newNode = new IPEntry(true);
 					knownNodeList.put(tempNodeIP, newNode);
 					setOfNodeIPs = knownNodeList.keySet();
-					knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+					if(!tempNodeIP.equals(myIP))
+					{
+						knownNodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+					}
 				} 
 				else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(knownNodeList.get(tempNodeIP).getTimeStamp()) &&
 						!tempNodeIP.equals(myIP))
@@ -168,7 +171,7 @@ public class Client {
 				blackOutTimer++;
 			}
 			
-			if (blackOutTimer == MAX_TIME*1.5)
+			if (blackOutTimer >= MAX_TIME*1.5)
 			{
 
 				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get() == myIP)
