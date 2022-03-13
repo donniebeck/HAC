@@ -118,7 +118,6 @@ public class P2P
 			timer++;
 			for (String ip : setOfNodeIPs)
 			{
-				System.out.println(ip + " : ttl : " + nodeList.get(ip).getTimeToLive());
 				nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
 				if (nodeList.get(ip).getTimeToLive() <= 0 && !ip.equals(myIP))
 				{
