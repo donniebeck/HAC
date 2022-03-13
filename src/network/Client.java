@@ -20,7 +20,7 @@ public class Client {
 		if(recievedList != null)
 		{
 			knownNodeList = recievedList;
-			setOfNodeIPs = recievedList.keySet();
+			setOfNodeIPs = knownNodeList.keySet();
 		}
 	}
 	
@@ -132,6 +132,7 @@ public class Client {
 						System.out.println("There was an error changing serverIP to " + setOfNodeIPs.stream().findFirst().get());
 					}
 				}
+				blackOutTimer = 0;
 			}
 			
 			timer++;
