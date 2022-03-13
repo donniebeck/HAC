@@ -93,20 +93,23 @@ public class P2P
 						
 						for (String tempNodeIP : recievedSetOfNodeIPs)
 						{
-							if (!setOfNodeIPs.contains(tempNodeIP))
+							if(!tempNodeIP.equals(myIP))
 							{
-								IPEntry newNode = new IPEntry(true);
-								nodeList.put(tempNodeIP, newNode);
-								setOfNodeIPs = nodeList.keySet();
-								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-								nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
-							} 
-							else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
-									!tempNodeIP.equals(myIP))
-							{
-								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-								nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
+								if (!setOfNodeIPs.contains(tempNodeIP))
+								{
+									IPEntry newNode = new IPEntry(true);
+									nodeList.put(tempNodeIP, newNode);
+									setOfNodeIPs = nodeList.keySet();
+									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
+								} 
+								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+								{
+									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
+								}
 							}
+							
 						}
 					}
 				}
@@ -118,6 +121,7 @@ public class P2P
 			timer++;
 			for (String ip : setOfNodeIPs)
 			{
+				System.out.println(ip + " ttl " + nodeList.get(ip).getTimeToLive());
 				nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
 				if (nodeList.get(ip).getTimeToLive() <= 0 && !ip.equals(myIP))
 				{
