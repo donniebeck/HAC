@@ -58,13 +58,6 @@ public class P2P
 			{
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
-				for (String ip : setOfNodeIPs)
-				{
-					if(!ip.equals(myIP) &&(nodeList.get(ip).getTimeToLive() <= 0)  )
-					{
-						nodeList.get(ip).setIsAlive(false);
-					}
-				}
 				sendToAll();
 				printNodesStatus();
 			}
@@ -89,6 +82,7 @@ public class P2P
 				if(recievedMessage.getisSimple())
 				{
 					nodeList.get(recievedIPString).setIsAlive(true);
+					nodeList.get(recievedIPString).setTimeToLive(MAX_TIME);
 				}
 				else
 				{
@@ -125,6 +119,10 @@ public class P2P
 			for (String ip : setOfNodeIPs)
 			{
 				nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
+				if (nodeList.get(ip).getTimeToLive() <= 0)
+				{
+					nodeList.get(ip).setIsAlive(false);
+				}
 			}
 		}
 		
