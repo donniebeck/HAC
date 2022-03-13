@@ -57,13 +57,6 @@ public class Server
 			if(timer == MAX_TIME)
 			{
 				timer = 0;
-				for(String ip : setOfClientIPs)
-				{
-					if (clientList.get(ip).getTimeToLive() <= 0)
-					{
-						clientList.get(ip).setIsAlive(false);
-					}
-				}
 				printClientStatus();
 				sendToAll();
 			}
@@ -98,6 +91,10 @@ public class Server
 			for (String ip : setOfClientIPs)
 			{
 				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);		
+				if (clientList.get(ip).getTimeToLive() <= 0)
+				{
+					clientList.get(ip).setIsAlive(false);
+				}
 			}
 		}
 	}
