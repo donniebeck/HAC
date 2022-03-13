@@ -17,8 +17,11 @@ public class Client {
 	
 	public static void updateNodes(Hashtable <String, IPEntry> recievedList)
 	{
-		setOfNodeIPs = recievedList.keySet(); 
-		knownNodeList = recievedList;
+		if(recievedList != null)
+		{
+			knownNodeList = recievedList;
+			setOfNodeIPs = recievedList.keySet();
+		}
 	}
 	
 	public static void loadIPs() 
@@ -63,8 +66,7 @@ public class Client {
 		loadIPs();
 		createSocket();
 		
-		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
-		DatagramPacket request = heartbeat.createPacket(serverIP, PORT);
+
 		
 		// Packet variable for receiving and holding server's response
 		byte[] responsebuffer = new byte[65508];
@@ -82,14 +84,14 @@ public class Client {
 		{
 			if(timer == randomTimer)
 			{
-				sendToServer(request);
+				sendToServer();
 			}
 			
 			if (timer == MAX_TIME)
 			{
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
-				sendToServer(request);
+				sendToServer();
 			}
 			
 			try 
@@ -140,8 +142,10 @@ public class Client {
 		
 	}
 
-	private static void sendToServer(DatagramPacket request)
+	private static void sendToServer()
 	{
+		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
+		DatagramPacket request = heartbeat.createPacket(serverIP, PORT);
 		try 
 		{
 			clientsocket.send(request);
