@@ -8,52 +8,52 @@ import java.util.*;
 
 public class Client {
 	public static DatagramSocket clientsocket = null;
-	public static String myIP = "150.243.144.254";
+	public static String myIP = "150.243.144.67";
 	public static InetAddress serverIP;
 	public static int PORT = 9876;
-	public static String SERVERIPSTRING = "150.243.192.195";
+	public static String SERVERIPSTRING = "150.243.193.236";
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
 	private static int MAX_TIME = 20;
 	
 	
-	public static void heartbeatToServer(Message requestMessage) {
-		DatagramPacket request = requestMessage.createPacket(serverIP, PORT);
-		
-		try 
-		{
-			clientsocket.send(request);
-			System.out.println("sending to: " + serverIP.getHostAddress());
-		}
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		// Packet variable for receiving and holding server's response
-		byte[] responsebuffer = new byte[65508];
-		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
-		
-		// Immediately catch the server's response, and discard it(run a loop to make
-		// sure it is done)
-		boolean flag = true;
-		Message responsemessage = new Message(false, true, "", knownNodeList);
-		
-		try 
-		{
-			clientsocket.receive(response);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		//Output the text of the response packet from server.
-
-		responsemessage = responsemessage.deserializer(response);
-
-		updateNodes(responsemessage.getnodeList());
-	}
-	
+//	public static void heartbeatToServer(Message requestMessage) {
+//		DatagramPacket request = requestMessage.createPacket(serverIP, PORT);
+//		
+//		try 
+//		{
+//			clientsocket.send(request);
+//			System.out.println("sending to: " + serverIP.getHostAddress());
+//		}
+//		catch (IOException e) 
+//		{
+//			e.printStackTrace();
+//		}
+//		
+//		// Packet variable for receiving and holding server's response
+//		byte[] responsebuffer = new byte[65508];
+//		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
+//		
+//		// Immediately catch the server's response, and discard it(run a loop to make
+//		// sure it is done)
+//		boolean flag = true;
+//		Message responsemessage = new Message(false, true, "", knownNodeList);
+//		
+//		try 
+//		{
+//			clientsocket.receive(response);
+//		} 
+//		catch (IOException e) 
+//		{
+//			e.printStackTrace();
+//		}
+//		//Output the text of the response packet from server.
+//
+//		responsemessage = responsemessage.deserializer(response);
+//
+//		updateNodes(responsemessage.getnodeList());
+//	}
+//	
 	
 	public static void updateNodes(Hashtable <String, IPEntry> recievedList)
 	{
@@ -115,6 +115,11 @@ public class Client {
 		createSocket();
 		
 		Message heartbeat= new Message(false, true, "Hi, This is the client", null);
+		DatagramPacket request = heartbeat.createPacket(serverIP, PORT);
+		
+		// Packet variable for receiving and holding server's response
+		byte[] responsebuffer = new byte[65508];
+		DatagramPacket response = new DatagramPacket(responsebuffer, responsebuffer.length);
 		
 		int timer = 0;
 		while (true)
@@ -123,7 +128,35 @@ public class Client {
 			if (timer == 7)
 			{
 				timer = 0;
-				heartbeatToServer(heartbeat);
+				
+				try 
+				{
+					clientsocket.send(request);
+					System.out.println("sending to: " + serverIP.getHostAddress());
+				}
+				catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				// Immediately catch the server's response, and discard it(run a loop to make
+				// sure it is done)
+				Message responsemessage = new Message(false, true, "", knownNodeList);
+				
+				try 
+				{
+					clientsocket.receive(response);
+				} 
+				catch (IOException e) 
+				{
+					System.out.println("No immediate response server");
+					e.printStackTrace();
+				}
+				//Output the text of the response packet from server.
+		
+				responsemessage = responsemessage.deserializer(response);
+		
+				updateNodes(responsemessage.getnodeList());
 				System.out.println("=================================");
 				System.out.println("The server responsed with those ips and their status:");
 				for(String ip: setOfNodeIPs)
