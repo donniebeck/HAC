@@ -23,6 +23,19 @@ public class Server
 
 	public static void main(String[] args)
 	{
+		runServer();
+	}
+	
+	public Server(Hashtable <String, IPEntry> takeoverList)
+	{
+		this.clientList = takeoverList;
+		this.setOfClientIPs = clientList.keySet();
+	}
+
+
+
+	public static void runServer()
+	{
 		createSocket();
 		
 		//Starting our timer

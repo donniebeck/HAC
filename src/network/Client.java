@@ -13,7 +13,7 @@ public class Client {
 	public static int PORT = 9876;
 	private static Hashtable<String, IPEntry> knownNodeList = new Hashtable<>();
 	private static Set<String> setOfNodeIPs = new HashSet<String>(); 
-	private static int MAX_TIME = 20;
+	private static int MAX_TIME = 5;
 	
 	
 //	public static void heartbeatToServer(Message requestMessage) {
@@ -134,7 +134,8 @@ public class Client {
 		
 		int timer = 0;
 		int blackOutTimer = 0;
-		while (true)
+		boolean serverIsUp = true;
+		while (serverIsUp)
 		{
 			if(timer == randomTimer)
 			{
@@ -146,12 +147,6 @@ public class Client {
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
 				sendToServer(request);
-			}
-			
-			if (blackOutTimer == MAX_TIME*1.5)
-			{
-				//if myIP is first, take over
-				//if not, change serverIP to first elemenet
 			}
 			
 			try 
@@ -172,8 +167,35 @@ public class Client {
 				System.out.println(timer + "\tNo message recieved");
 				blackOutTimer++;
 			}
+			
+			if (blackOutTimer == MAX_TIME*1.5)
+			{
+
+				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get() == myIP)
+				{
+					System.out.println("Taking over as server");
+					setOfNodeIPs.remove(myIP);
+					knownNodeList.remove(myIP);
+					serverIsUp = false;
+				}
+				else
+				{
+					try
+					{
+						serverIP = InetAddress.getByName(setOfNodeIPs.stream().findFirst().get());
+					} catch (UnknownHostException e)
+					{
+						System.out.println("There was an error changing serverIP to " + setOfNodeIPs.stream().findFirst().get());
+					}
+				}
+			}
+			
 			timer++;
 		}
+		clientsocket.close();
+		Server server = new Server(knownNodeList);
+		server.runServer();
+		
 	}
 
 	private static void sendToServer(DatagramPacket request)
