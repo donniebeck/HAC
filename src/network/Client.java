@@ -118,7 +118,7 @@ public class Client {
 			if (blackOutTimer >= MAX_TIME*1.5)
 			{
 
-				if (setOfNodeIPs.isEmpty() || setOfNodeIPs.stream().findFirst().get().equals(myIP))
+				if (setOfNodeIPs.isEmpty())
 				{
 					System.out.println("Taking over as server");
 					knownNodeList.remove(myIP);
@@ -130,7 +130,14 @@ public class Client {
 					{
 						for (String ip : setOfNodeIPs)
 						{
-							if(knownNodeList.get(ip).getIsAlive())
+							if (ip.equals(myIP))
+							{
+								System.out.println("Taking over as server");
+								knownNodeList.remove(myIP);
+								serverIsUp = false;
+								break;
+							}
+							else if(knownNodeList.get(ip).getIsAlive())
 							{
 								serverIP = InetAddress.getByName(ip);
 								break;
