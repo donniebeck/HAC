@@ -21,7 +21,7 @@ public class P2P
 	private static Set<String> setOfNodeIPs; 
 	private static String myIP;
 	private static DatagramSocket socket;
-	private static Message message = new Message(true, true, myIP, "Hello, this is a client ", nodeList);
+	private static Message message = new Message(true, true, "Hello, this is a client ", myIP, nodeList);
 	
 
 	public static void main(String[] args)
@@ -105,11 +105,13 @@ public class P2P
 								nodeList.put(tempNodeIP, newNode);
 								setOfNodeIPs = nodeList.keySet();
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+								nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
 							} 
 							else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) &&
 									!tempNodeIP.equals(myIP))
 							{
 								nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+								nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
 							}
 						}
 					}
@@ -177,6 +179,7 @@ public class P2P
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
 		myIP = configReader.getSingleIP("myIP.txt");
+		message.setSenderIP(myIP);
 		
 		//Load all IPs into hashtable from txt file
 		String ipList[] = configReader.getIPListFromFile("ipList.txt");
@@ -193,7 +196,6 @@ public class P2P
 			nodeList.put(ip, newNode);
 			}
 		}
-		
 		setOfNodeIPs = nodeList.keySet();
 	}
 

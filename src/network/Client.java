@@ -82,6 +82,9 @@ public class Client {
 		int timer = 0;
 		int blackOutTimer = 0;
 		boolean serverIsUp = true;
+		
+		sendToServer();
+		
 		while (serverIsUp)
 		{
 			if(timer == randomTimer)

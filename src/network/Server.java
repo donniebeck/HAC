@@ -84,8 +84,11 @@ public class Server
 				}
 				clientList.get(tempIPString).setIsAlive(true);
 				clientList.get(tempIPString).setTimeToLive(MAX_TIME*2);
+				
+				printClientStatus();
 				sendToAll();
-			} catch (IOException e)
+			}
+			catch (IOException e)
 			{
 				System.out.println(timer + "\t No message recieved");
 			}
@@ -94,8 +97,7 @@ public class Server
 			timer++;
 			for (String ip : setOfClientIPs)
 			{
-				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);
-				System.out.println(ip + " : ttl = "+clientList.get(ip).getTimeToLive());			}
+				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);		}
 		}
 	}
 
@@ -110,7 +112,8 @@ public class Server
 				message.updateTimestamp();
 				DatagramPacket packet = message.createPacket(InetAddress.getByName(ip), PORT_NO);
 				socket.send(packet);
-			} catch (IOException e)
+			} 
+			catch (IOException e)
 			{
 				System.out.println("There was an error creating a packet for " + ip);
 				e.printStackTrace();
@@ -134,7 +137,8 @@ public class Server
 		{
 			socket = new DatagramSocket(PORT_NO);
 			socket.setSoTimeout(1000);
-		} catch (SocketException e)
+		}
+		catch (SocketException e)
 		{
 			System.out.println("The datagram socket could not be created");
 			e.printStackTrace();
