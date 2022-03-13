@@ -26,10 +26,8 @@ public class Server
 		runServer();
 	}
 	
-	public Server(Hashtable <String, IPEntry> takeoverList)
+	public Server()
 	{
-		this.clientList = takeoverList;
-		this.setOfClientIPs = clientList.keySet();
 	}
 
 

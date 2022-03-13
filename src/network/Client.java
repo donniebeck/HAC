@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.w3c.dom.NodeList;
+
 
 
 public class Client {
@@ -126,10 +128,17 @@ public class Client {
 				{
 					try
 					{
-						serverIP = InetAddress.getByName(setOfNodeIPs.stream().findFirst().get());
+						for (String ip : setOfNodeIPs)
+						{
+							if(knownNodeList.get(ip).getIsAlive())
+							{
+								serverIP = InetAddress.getByName(ip);
+								break;
+							}
+						}
 					} catch (UnknownHostException e)
 					{
-						System.out.println("There was an error changing serverIP to " + setOfNodeIPs.stream().findFirst().get());
+						System.out.println("There was an error changing the serverIP");
 					}
 				}
 				blackOutTimer = 0;
@@ -138,7 +147,7 @@ public class Client {
 			timer++;
 		}
 		clientsocket.close();
-		Server server = new Server(knownNodeList);
+		Server server = new Server();
 		server.runServer();
 		
 	}
