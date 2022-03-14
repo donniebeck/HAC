@@ -48,6 +48,7 @@ public class P2P
 		
 		while (true)
 		{
+			printNodesStatus();
 			if (timer == randomTimer)
 			{
 				sendToAll();
@@ -103,7 +104,7 @@ public class P2P
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
 									nodeList.get(tempNodeIP).setTimeStamp(recievedList.get(tempNodeIP).getTimeStamp());
 								} 
-								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) && nodeList.get(tempNodeIP).getTimeToLive() <= 0)
+								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
 								{
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
@@ -140,7 +141,7 @@ public class P2P
 		System.out.println("=================================");
 		for (String ip : setOfNodeIPs)
 		{
-			System.out.println(ip + nodeList.get(ip).getStatusString());
+			System.out.println(ip + nodeList.get(ip).getStatusString() + " timeout in " + nodeList.get(ip).getTimeToLive());
 		}
 		System.out.println("=================================");
 	}
