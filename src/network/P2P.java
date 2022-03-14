@@ -60,7 +60,6 @@ public class P2P
 				timer = 0;
 				randomTimer = rand.nextInt(MAX_TIME-1);
 				sendToAll();
-				printNodesStatus();
 			}
 			
 			
@@ -70,7 +69,7 @@ public class P2P
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
 				String recievedIPString = recievedMessage.getSenderIP();
-				System.out.println(recievedIPString + " : " + recievedMessage.getText());
+				System.out.println(timer + "\t" + recievedIPString + " : " + recievedMessage.getText());
 				
 				//if the sender is unknown to this host, add it to its list
 				if(!nodeList.containsKey(recievedIPString))

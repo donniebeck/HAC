@@ -54,20 +54,18 @@ public class Server
 		
 		while(true)
 		{
+			printClientStatus();
 			if(timer == MAX_TIME)
 			{
 				timer = 0;
-				printClientStatus();
 				sendToAll();
 			}
-			
-			
 			try
 			{
 				socket.receive(recievedPacket);
 				recievedMessage = recievedMessage.deserializer(recievedPacket);
 				String tempIPString = recievedMessage.getSenderIP();
-				System.out.println(tempIPString + " : " + recievedMessage.getText());
+				System.out.println(timer + "\t"+tempIPString + " : " + recievedMessage.getText());
 				
 				if(!setOfClientIPs.contains(tempIPString))
 				{
@@ -77,8 +75,6 @@ public class Server
 				}
 				clientList.get(tempIPString).setIsAlive(true);
 				clientList.get(tempIPString).setTimeToLive(MAX_TIME*2);
-				
-				printClientStatus();
 				sendToAll();
 			}
 			catch (IOException e)
