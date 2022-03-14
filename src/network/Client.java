@@ -120,7 +120,7 @@ public class Client {
 			
 			if (blackOutTimer >= MAX_TIME*2)
 			{
-				knownNodeList.get(serverIP).setIsAlive(false);
+				knownNodeList.get(serverIP.getHostAddress()).setIsAlive(false);
 				
 				if (setOfNodeIPs.isEmpty())
 				{
@@ -156,7 +156,7 @@ public class Client {
 			timer++;
 		}
 		clientsocket.close();
-		Server server = new Server();
+		Server server = new Server(knownNodeList);
 		server.runServer();
 		
 	}

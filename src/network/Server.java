@@ -28,15 +28,20 @@ public class Server
 		runServer();
 	}
 	
-	public Server()
+	public Server(Hashtable <String, IPEntry> passedList)
 	{
+		this.setOfClientIPs = passedList.keySet();
+		for (String ip : setOfClientIPs)
+		{
+			this.clientList.put(ip, passedList.get(ip));
+		}
 	}
 	public static void loadIPs() 
 	{
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
 		myIP = configReader.getSingleIP("myIP.txt");
-		if (!clientList.contains(myIP))
+		if (!setOfClientIPs.contains(myIP))
 		{
 			IPEntry newNode = new IPEntry(true);
 			clientList.put(myIP, newNode);
