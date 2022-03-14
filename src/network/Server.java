@@ -20,7 +20,7 @@ public class Server
 	private static Hashtable <String, IPEntry> clientList = new Hashtable<>();
 	private static Set<String> setOfClientIPs = new HashSet<String>(); 
 	private static String myIP;
-	private static Message message = new Message(false, false, myIP, "Hello, this is the server ", clientList);
+	private static Message message = new Message(false, false, "Hello, this is the server ", myIP, clientList);
 	
 
 	public static void main(String[] args)
