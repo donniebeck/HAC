@@ -82,7 +82,6 @@ public class P2P
 				if(recievedMessage.getisSimple())
 				{
 					nodeList.get(recievedIPString).setIsAlive(true);
-					nodeList.get(recievedIPString).setTimeToLive(MAX_TIME);
 				}
 				else
 				{
@@ -101,12 +100,12 @@ public class P2P
 									nodeList.put(tempNodeIP, newNode);
 									setOfNodeIPs = nodeList.keySet();
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
+									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
 								} 
 								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
 								{
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
+									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
 								}
 							}
 							
@@ -143,14 +142,13 @@ public class P2P
 
 	private static void sendToAll()
 	{
-		
+		message.updateTimestamp();
 		for (String ip : setOfNodeIPs)
 		{
 			if(!ip.equals(myIP))
 			{
 				try
 				{
-					message.updateTimestamp();
 					DatagramPacket packet = message.createPacket(InetAddress.getByName(ip), PORT_NO);
 					socket.send(packet);
 				} catch (IOException e)
