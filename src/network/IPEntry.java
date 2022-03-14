@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class IPEntry implements Serializable
 {
-	final int TTL = 20;
+	final int TTL = 10;
 	Boolean isAlive;
 	LocalDateTime timeStamp;
 	int timeToLive;

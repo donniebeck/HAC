@@ -6,8 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Set;
@@ -24,8 +22,6 @@ public class P2P
 	private static String myIP;
 	private static DatagramSocket socket;
 	private static Message message = new Message(true, true, "Hello, this is a client ", myIP, nodeList);
-	private static LocalDateTime now;
-	
 	
 
 	public static void main(String[] args)
@@ -86,6 +82,7 @@ public class P2P
 				if(recievedMessage.getisSimple())
 				{
 					nodeList.get(recievedIPString).setIsAlive(true);
+					nodeList.get(recievedIPString).setTimeToLive(MAX_TIME);
 				}
 				else
 				{
@@ -103,11 +100,13 @@ public class P2P
 									IPEntry newNode = new IPEntry(true);
 									nodeList.put(tempNodeIP, newNode);
 									setOfNodeIPs = nodeList.keySet();
-									nodeList.put(tempNodeIP, recievedList.get(tempNodeIP));
+									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
 								} 
 								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
 								{
-									nodeList.put(tempNodeIP, recievedList.get(tempNodeIP));
+									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
+									nodeList.get(tempNodeIP).setTimeToLive(MAX_TIME);
 								}
 							}
 							
@@ -122,16 +121,11 @@ public class P2P
 			timer++;
 			for (String ip : setOfNodeIPs)
 			{
-				now = LocalDateTime.now();
-				ZoneId zoneId = ZoneId.systemDefault();
-				long nowInSeconds = now.atZone(zoneId).toEpochSecond();
-				long thenInSeconds = nodeList.get(ip).getTimeStamp().atZone(zoneId).toEpochSecond();
-				if (nowInSeconds  - thenInSeconds > nodeList.get(ip).getTimeToLive())
+				nodeList.get(ip).setTimeToLive(nodeList.get(ip).getTimeToLive()-1);
+				if (nodeList.get(ip).getTimeToLive() <= 0 && !ip.equals(myIP))
 				{
-					System.out.println(ip + " timed out");
 					nodeList.get(ip).setIsAlive(false);
 				}
-				
 			}
 		}
 		
