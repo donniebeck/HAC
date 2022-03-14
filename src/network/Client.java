@@ -118,13 +118,13 @@ public class Client {
 				blackOutTimer++;
 			}
 			
-			if (blackOutTimer >= MAX_TIME*1.5)
+			if (blackOutTimer >= MAX_TIME*2)
 			{
-
+				knownNodeList.get(serverIP).setIsAlive(false);
+				
 				if (setOfNodeIPs.isEmpty())
 				{
 					System.out.println("Taking over as server");
-					knownNodeList.remove(myIP);
 					serverIsUp = false;
 				}
 				else
@@ -136,7 +136,6 @@ public class Client {
 							if (ip.equals(myIP))
 							{
 								System.out.println("Taking over as server");
-								knownNodeList.remove(myIP);
 								serverIsUp = false;
 								break;
 							}

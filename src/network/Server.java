@@ -36,6 +36,12 @@ public class Server
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
 		myIP = configReader.getSingleIP("myIP.txt");
+		if (!clientList.contains(myIP))
+		{
+			IPEntry newNode = new IPEntry(true);
+			clientList.put(myIP, newNode);
+			setOfClientIPs.add(myIP);
+		}
 	}
 
 	public static void runServer()
@@ -86,7 +92,10 @@ public class Server
 			timer++;
 			for (String ip : setOfClientIPs)
 			{
-				clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);		
+				if(!ip.equals(myIP))
+				{
+					clientList.get(ip).setTimeToLive(clientList.get(ip).getTimeToLive()-1);	
+				}
 				if (clientList.get(ip).getTimeToLive() <= 0)
 				{
 					clientList.get(ip).setIsAlive(false);
@@ -120,7 +129,7 @@ public class Server
 		System.out.println("=================================");
 		for (String ip : setOfClientIPs)
 		{
-			System.out.println(ip + clientList.get(ip).getStatusString());
+			System.out.println(ip + clientList.get(ip).getStatusString() +" timeout in "+ clientList.get(ip).getTimeToLive());
 		}
 		System.out.println("=================================");
 	}
