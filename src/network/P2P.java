@@ -101,11 +101,13 @@ public class P2P
 									setOfNodeIPs = nodeList.keySet();
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
+									nodeList.get(tempNodeIP).setTimeStamp(recievedList.get(tempNodeIP).getTimeStamp());
 								} 
 								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
 								{
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
+									nodeList.get(tempNodeIP).setTimeStamp(recievedList.get(tempNodeIP).getTimeStamp());
 								}
 							}
 							
