@@ -39,7 +39,7 @@ public class P2P
 		
 		//Setting up our random message timer
 		Random rand = new Random();
-		int randomTimer = rand.nextInt(MAX_TIME-1);
+		int randomTimer = rand.nextInt(MAX_TIME-5);
 		
 		//Our initial heartbeat
 		sendToAll();
@@ -107,7 +107,10 @@ public class P2P
 								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
 								{
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
-									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
+									if (recievedList.get(tempNodeIP).getTimeToLive() > nodeList.get(tempNodeIP).getTimeToLive())
+									{
+										nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
+									}
 									nodeList.get(tempNodeIP).setTimeStamp(recievedList.get(tempNodeIP).getTimeStamp());
 								}
 							}
