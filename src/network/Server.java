@@ -110,16 +110,19 @@ public class Server
 	{
 		for (String ip : setOfClientIPs)
 		{
-			try
+			if(!ip.equals(myIP)) 
 			{
-				message.updateTimestamp();
-				DatagramPacket packet = message.createPacket(InetAddress.getByName(ip), PORT_NO);
-				socket.send(packet);
-			} 
-			catch (IOException e)
-			{
-				System.out.println("There was an error creating a packet for " + ip);
-				e.printStackTrace();
+				try
+				{
+					message.updateTimestamp();
+					DatagramPacket packet = message.createPacket(InetAddress.getByName(ip), PORT_NO);
+					socket.send(packet);
+				} 
+				catch (IOException e)
+				{
+					System.out.println("There was an error creating a packet for " + ip);
+					e.printStackTrace();
+				}
 			}
 		}	
 	}
