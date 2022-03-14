@@ -103,7 +103,7 @@ public class P2P
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
 									nodeList.get(tempNodeIP).setTimeStamp(recievedList.get(tempNodeIP).getTimeStamp());
 								} 
-								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()))
+								else if(recievedList.get(tempNodeIP).getTimeStamp().isAfter(nodeList.get(tempNodeIP).getTimeStamp()) && nodeList.get(tempNodeIP).getTimeToLive() <= 0)
 								{
 									nodeList.get(tempNodeIP).setIsAlive(recievedList.get(tempNodeIP).getIsAlive());
 									nodeList.get(tempNodeIP).setTimeToLive(recievedList.get(tempNodeIP).getTimeToLive());
