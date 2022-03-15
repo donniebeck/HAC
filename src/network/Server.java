@@ -78,7 +78,7 @@ public class Server
 				String tempIPString = recievedMessage.getSenderIP();
 				System.out.println(timer + "\t"+tempIPString + " : " + recievedMessage.getText());
 				
-				if(!recievedMessage.getisSimple())
+				if(!recievedMessage.getisSimple() && !recievedMessage.getSenderIP().equals(myIP))
 				{
 					becomeClient(recievedMessage.getSenderIP());
 					break;
