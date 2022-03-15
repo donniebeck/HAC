@@ -41,6 +41,7 @@ public class Server
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
 		myIP = configReader.getSingleIP("myIP.txt");
+		message.setSenderIP(myIP);
 		if (!setOfClientIPs.contains(myIP))
 		{
 			IPEntry newNode = new IPEntry(true);
