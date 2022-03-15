@@ -121,7 +121,7 @@ public class Server
 	{
 		socket.close();
 		Client newClient = new Client(serverString);
-		newClient.runClient();
+		newClient.runClient(true);
 		
 	}
 

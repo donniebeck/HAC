@@ -37,14 +37,14 @@ public class Client {
 		}
 	}
 	
-	public static void loadIPs() 
+	public static void loadIPs(boolean takeOver) 
 	{
 		//Load myIP from txt file
 		ConfigReader configReader = new ConfigReader();
 		myIP = configReader.getSingleIP("myIP.txt");
 		
 		// Find the IP address of server node.
-		if (serverIP == null)
+		if (!takeOver)
 		{
 			InetAddress hostaddress = null;
 			try 
@@ -80,12 +80,12 @@ public class Client {
 	
 	public static void main(String[] args) throws InterruptedException 
 	{
-		runClient();
+		runClient(false);
 	}
 
-	public static void runClient()
+	public static void runClient(boolean takeOver)
 	{
-		loadIPs();
+		loadIPs(takeOver);
 		createSocket();
 		
 
