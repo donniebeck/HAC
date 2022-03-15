@@ -80,7 +80,7 @@ public class Server
 				
 				if(!recievedMessage.getisSimple())
 				{
-					becomeClient();
+					becomeClient(recievedMessage.getSenderIP());
 					break;
 				}
 				
@@ -117,10 +117,10 @@ public class Server
 
 
 
-	private static void becomeClient()
+	private static void becomeClient(String serverString)
 	{
 		socket.close();
-		Client newClient = new Client();
+		Client newClient = new Client(serverString);
 		newClient.runClient();
 		
 	}

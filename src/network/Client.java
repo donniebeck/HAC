@@ -26,9 +26,15 @@ public class Client {
 		}
 	}
 	
-	public Client()
+	public Client(String serverString)
 	{
-		super();
+		try
+		{
+			this.serverIP = InetAddress.getByName(serverString);
+		} catch (UnknownHostException e)
+		{
+			System.out.print("There was an error restarting as a client");
+		}
 	}
 	
 	public static void loadIPs() 
@@ -38,16 +44,20 @@ public class Client {
 		myIP = configReader.getSingleIP("myIP.txt");
 		
 		// Find the IP address of server node.
-		InetAddress hostaddress = null;
-		try 
+		if (serverIP != null)
 		{
-			hostaddress = InetAddress.getByName(configReader.getSingleIP("serverIP.txt"));
-		} 
-		catch (UnknownHostException e) 
-		{
-			e.printStackTrace();
+			InetAddress hostaddress = null;
+			try 
+			{
+				hostaddress = InetAddress.getByName(configReader.getSingleIP("serverIP.txt"));
+			} 
+			catch (UnknownHostException e) 
+			{
+				e.printStackTrace();
+			}
+			serverIP = hostaddress;
 		}
-		serverIP = hostaddress;
+
 	}
 	
 
