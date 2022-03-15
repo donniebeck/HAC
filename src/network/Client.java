@@ -44,7 +44,7 @@ public class Client {
 		myIP = configReader.getSingleIP("myIP.txt");
 		
 		// Find the IP address of server node.
-		if (serverIP != null)
+		if (serverIP == null)
 		{
 			InetAddress hostaddress = null;
 			try 
