@@ -51,6 +51,7 @@ public class ConfigReader
 		{
 			myIP = scanner.nextLine();
 		}
+		scanner.close();
 		return myIP;
 	}
 	
