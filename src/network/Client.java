@@ -26,6 +26,11 @@ public class Client {
 		}
 	}
 	
+	public Client()
+	{
+		super();
+	}
+	
 	public static void loadIPs() 
 	{
 		//Load myIP from txt file
@@ -64,6 +69,11 @@ public class Client {
 	
 	
 	public static void main(String[] args) throws InterruptedException 
+	{
+		runClient();
+	}
+
+	public static void runClient()
 	{
 		loadIPs();
 		createSocket();
@@ -158,7 +168,6 @@ public class Client {
 		clientsocket.close();
 		Server server = new Server(knownNodeList);
 		server.runServer();
-		
 	}
 
 	private static void sendToServer()

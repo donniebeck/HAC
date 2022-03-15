@@ -78,6 +78,12 @@ public class Server
 				String tempIPString = recievedMessage.getSenderIP();
 				System.out.println(timer + "\t"+tempIPString + " : " + recievedMessage.getText());
 				
+				if(!recievedMessage.getisSimple())
+				{
+					becomeClient();
+					break;
+				}
+				
 				if(!setOfClientIPs.contains(tempIPString))
 				{
 					IPEntry newNode = new IPEntry(true);
@@ -110,6 +116,14 @@ public class Server
 	}
 
 
+
+	private static void becomeClient()
+	{
+		socket.close();
+		Client newClient = new Client();
+		newClient.runClient();
+		
+	}
 
 	private static void sendToAll()
 	{
